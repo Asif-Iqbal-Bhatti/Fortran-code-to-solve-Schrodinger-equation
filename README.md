@@ -7,3 +7,7 @@ is a little faster. Lastly, dsyev just takes the given matrix and solves for eig
 So, if by execution time (by calling CPU_time subroutine) it could be stated in this way
 
 dstebz < dsbev < dsyev
+
+DSYEV computes the eigenvalues and, optionally, the left and/or right eigenvectors for symmetric matrices,
+DSBEV computes all the eigenvalues and, optionally, eigenvectors of a real symmetric band matrix.
+DSTEBZ computes the eigenvalues of a symmetric tridiagonal matrix T. The user may ask for all eigenvalues, all eigenvalues in the half-open interval (V L; V U], or the IL-th through IU-th eigenvalues.
