@@ -6,6 +6,14 @@ called in the given range, which implies no need for extra calculation. If compa
 is a little faster. Lastly, dsyev just takes the given matrix and solves for eigenvalues and optionally eigenvectors. Over here it doesn’t do any extra effort of assigning matrix to other dimensions and solve.
 So, if by execution time (by calling CPU_time subroutine) it could be stated in this way
 
+'''
+TO COMPILE the code with gnu compiler edit the makefile
+LIBS=-lblas  -llapack 
+F90=mpifort -C
+with INTEl compiler use
+F90=ifort -mkl=parrallel
+'''
+
 ```
 dstebz < dsbev < dsyev
 
