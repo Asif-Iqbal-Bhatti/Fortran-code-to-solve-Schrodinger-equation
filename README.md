@@ -13,7 +13,8 @@ DSYEV computes the eigenvalues and, optionally, the left and/or right eigenvecto
 
 DSBEV computes all the eigenvalues and, optionally, eigenvectors of a real symmetric band matrix.
 
-DSTEBZ computes the eigenvalues of a symmetric tridiagonal matrix T. The user may ask for all eigenvalues, all eigenvalues in the half-open interval (V L; V U], or the IL-th through IU-th eigenvalues.
+DSTEBZ computes the eigenvalues of a symmetric tridiagonal matrix T. The user may ask for all eigenvalues, 
+all eigenvalues in the half-open interval (V L; V U], or the IL-th through IU-th eigenvalues.
 ```
 
 ![alt text](https://user-images.githubusercontent.com/7361722/74036959-98d58c80-49bd-11ea-9de9-c2d4fd2f2f4a.png)
