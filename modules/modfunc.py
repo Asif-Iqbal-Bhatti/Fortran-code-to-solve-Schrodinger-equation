@@ -34,7 +34,7 @@ def Lagrange1(x, y, n, xi, yi, ni):
 #  yi[] - interpolant values (output)
 #  ni   - number of interpolation points
 #----------------------------------------------------------------------------
-   yf = [[0]*(n+1) for i in range(n+1)]          # factors of the interpolant
+   yf = [[0]*(n+1) for _ in range(n+1)]
 
    for i in range(1,n+1):      # prepare invariant factors of the interpolant
       p = 1e0
@@ -63,7 +63,7 @@ def Neville(x, y, n, xi):
 #  xi  - interpolation argument
 #  err - estimate of the absolute error (output)
 #----------------------------------------------------------------------------
-   p = [[0]*(n+1) for i in range(n+1)]    # values of successive interpolants
+   p = [[0]*(n+1) for _ in range(n+1)]
 
    for i in range(1,n+1): p[i] = y[i]    # initialize with 0-order polynomial
 
@@ -184,8 +184,8 @@ def MultiFit(x, y, sigmy, n, iopt, a, sigma, npar, Func):
 #               Func(x, func, npar)
 #  Calls: GaussJordan (linsys.py)
 #----------------------------------------------------------------------------
-   c = [[0]*(n+1) for i in range(n+1)]
-   b = [[0]*2 for i in range(n+1)]
+   c = [[0]*(n+1) for _ in range(n+1)]
+   b = [[0]*2 for _ in range(n+1)]
    func = [0]*(npar+1)
 
    if (iopt == 0):
@@ -239,8 +239,8 @@ def PolFit(x, y, sigmy, n, iopt, a, sigma, npar):
 #  chi2    - value of Chi-square merit function for the output parameters
 #  Calls: GaussJordan (linsys.py)
 #----------------------------------------------------------------------------
-   c = [[0]*(n+1) for i in range(n+1)]
-   b = [[0]*2 for i in range(n+1)]
+   c = [[0]*(n+1) for _ in range(n+1)]
+   b = [[0]*2 for _ in range(n+1)]
    func = [0]*(npar+1)
 
    if (iopt == 0):
@@ -344,11 +344,13 @@ def MarqFit(x, y, sigmy, n, iopt, a, sigma, npar, Func):
    eps = 1e-4                                  # relative precision criterion
    itmax = 1000                                      # max. no. of iterations
 
-   c   = [[0]*(n+1) for i in range(n+1)]
-   c0  = [[0]*(n+1) for i in range(n+1)]
-   cov = [[0]*(n+1) for i in range(n+1)]
-   da  = [[0]*2 for i in range(n+1)]
-   a1 = [0]*(n+1); b = [0]*(n+1); b0 = [0]*(n+1)
+   c = [[0]*(n+1) for _ in range(n+1)]
+   c0 = [[0]*(n+1) for _ in range(n+1)]
+   cov = [[0]*(n+1) for _ in range(n+1)]
+   da = [[0]*2 for _ in range(n+1)]
+   a1 = [0]*(n+1)
+   b = [0]*(n+1)
+   b0 = [0]*(n+1)
    func = [0]*(npar+1)
 
    if (iopt == 0):
@@ -388,7 +390,6 @@ def MarqFit(x, y, sigmy, n, iopt, a, sigma, npar, Func):
       if ((err <= eps) and (fabs(1e0 - chi2/chi20) <= eps)): break
 
    if (it >= itmax): print("MarqFit: max. # of iterations exceeded !")
-                                                # uncertainties of parameters
    for j in range(1,npar+1): sigma[j] = sqrt(cov[j][j])
 
    return chi2

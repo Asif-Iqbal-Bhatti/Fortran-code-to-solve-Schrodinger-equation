@@ -21,29 +21,28 @@ ht = 0.001e0                                                 # time step size
 n = 2                                              # number of 1st order ODEs
 u = [0]*(n+1)                                           # solution components
 
-out = open("pendulum.txt","w")                             # open output file
-out.write("      t         u        du\n")
+with open("pendulum.txt","w") as out:
+   out.write("      t         u        du\n")
 
-t = 0e0
-u[1] = u0; u[2] = du0                                        # initial values
-out.write(("{0:10.5f}{1:10.5f}{2:10.5f}\n").format(t,u[1],u[2]))
-
-nT = 0                                               # number of half-periods
-t1 = t2 = 0e0                                       # bounding solution zeros
-us = u[1]                                                     # save solution
-while (t+ht <= tmax):                                      # propagation loop
-   RungeKutta(t,ht,u,n,Func)
-   t += ht
-
-   if (u[1]*us < 0e0):                 # count solution passages through zero
-      if (t1 == 0): t1 = t                                     # initial zero
-      else: t2 = t; nT += 1                                      # final zero
-   us = u[1]                                                  # save solution
-
+   t = 0e0
+   u[1] = u0
+   u[2] = du0                                        # initial values
    out.write(("{0:10.5f}{1:10.5f}{2:10.5f}\n").format(t,u[1],u[2]))
 
-T = 2e0*(t2-t1) / nT                                      # calculated period
-T0 = 2e0*pi*sqrt(l/g)                                       # harmonic period
-print("u0 = {0:7.5f}  T/T0 = {1:7.5f}".format(u0,T/T0))
+   nT = 0                                               # number of half-periods
+   t1 = t2 = 0e0                                       # bounding solution zeros
+   us = u[1]                                                     # save solution
+   while (t+ht <= tmax):                                      # propagation loop
+      RungeKutta(t,ht,u,n,Func)
+      t += ht
 
-out.close()
+      if (u[1]*us < 0e0):                 # count solution passages through zero
+         if (t1 == 0): t1 = t                                     # initial zero
+         else: t2 = t; nT += 1                                      # final zero
+      us = u[1]                                                  # save solution
+
+      out.write(("{0:10.5f}{1:10.5f}{2:10.5f}\n").format(t,u[1],u[2]))
+
+   T = 2e0*(t2-t1) / nT                                      # calculated period
+   T0 = 2e0*pi*sqrt(l/g)                                       # harmonic period
+   print("u0 = {0:7.5f}  T/T0 = {1:7.5f}".format(u0,T/T0))

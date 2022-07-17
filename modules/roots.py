@@ -17,21 +17,23 @@ def Bisect(Func, a, b):
    eps = 1e-10                                   # relative precision of root
    itmax = 100                                       # max. no. of iterations
 
-   x = a; fa = Func(x)                                       # is a the root?
+   x = a
+   fa = Func(x)                                       # is a the root?
    if (fabs(fa) == 0e0): return (x,0)
-   x = b; fb = Func(x)                                       # is b the root?
+   x = b
+   fb = Func(x)                                       # is b the root?
    if (fabs(fb) == 0e0): return (x,0)
 
    if (fa*fb > 0): return (x,1)               # [a,b] does not contain a root
-                                              # or contains several roots
-   for it in range(1,itmax+1):
+   for _ in range(1,itmax+1):
       x = 0.5e0 * (a + b)                                 # new approximation
       fx = Func(x)
       if (fa*fx > 0): a = x                    # choose new bounding interval
       else: b = x
       if (((b-a) <= eps*fabs(x)) or (fabs(fx) <= eps)): return (x,0)
 
-   print("Bisect: max. no. of iterations exceeded !"); return (x,2)
+   print("Bisect: max. no. of iterations exceeded !")
+   return (x,2)
 
 #============================================================================
 def FalsPos(Func, a, b):
@@ -45,14 +47,15 @@ def FalsPos(Func, a, b):
    eps = 1e-10                                   # relative precision of root
    itmax = 100                                       # max. no. of iterations
 
-   x = a; fa = Func(x)                                       # is a the root?
+   x = a
+   fa = Func(x)                                       # is a the root?
    if (fabs(fa) == 0e0): return (x,0)
-   x = b; fb = Func(x)                                       # is b the root?
+   x = b
+   fb = Func(x)                                       # is b the root?
    if (fabs(fb) == 0e0): return (x,0)
 
    if (fa*fb > 0): return (x,1)               # [a,b] does not contain a root
-                                              # or contains several roots
-   for it in range(1,itmax+1):
+   for _ in range(1,itmax+1):
       x = (a*fb - b*fa)/(fb - fa)                         # new approximation
       fx = Func(x)
       if (fa*fx > 0):                          # choose new bounding interval
@@ -61,7 +64,8 @@ def FalsPos(Func, a, b):
          dx = b - x; b = x; fb = fx
       if ((fabs(dx) <= eps*fabs(x)) or (fabs(fx) <= eps)): return (x,0)
 
-   printf("FalsPos: max. no. of iterations exceeded !"); return (x,2)
+   printf("FalsPos: max. no. of iterations exceeded !")
+   return (x,2)
 
 #============================================================================
 def Iter(Func, a, b, x):
@@ -103,14 +107,15 @@ def Newton(Func, a, b, x):
    eps = 1e-10                                   # relative precision of root
    itmax = 100                                       # max. no. of iterations
 
-   for it in range(1,itmax+1):
+   for _ in range(1,itmax+1):
       (f,df) = Func(x)                              # function and derivative
       dx = -f/df if fabs(df) > eps else -f                  # root correction
       x += dx                                             # new approximation
       if ((x < a) or (x > b)): return (x,1)   # [a,b] does not contain a root
       if (fabs(dx) <= eps*fabs(x)): return (x,0)          # check convergence
 
-   print("Newton: max. no. of iterations exceeded !"); return (x,2)
+   print("Newton: max. no. of iterations exceeded !")
+   return (x,2)
 
 #============================================================================
 def NewtonNumDrv(Func, a, b, x):
@@ -125,7 +130,7 @@ def NewtonNumDrv(Func, a, b, x):
    eps = 1e-10                                   # relative precision of root
    itmax = 100                                       # max. no. of iterations
 
-   for it in range(1,itmax+1):
+   for _ in range(1,itmax+1):
       f = Func(x)
       dx = eps*fabs(x) if x else eps                        # derivation step
       df = (Func(x+dx)-f)/dx                           # numerical derivative
@@ -134,7 +139,8 @@ def NewtonNumDrv(Func, a, b, x):
       if ((x < a) or (x > b)): return (x,1)   # [a,b] does not contain a root
       if (fabs(dx) <= eps*fabs(x)): return (x,0)          # check convergence
 
-   print("NewtonNumDrv: max. no. of iterations exceeded !"); return (x,2)
+   print("NewtonNumDrv: max. no. of iterations exceeded !")
+   return (x,2)
 
 #============================================================================
 def Secant(Func, a, b, x):
@@ -148,18 +154,21 @@ def Secant(Func, a, b, x):
    eps = 1e-10                                   # relative precision of root
    itmax = 1000                                      # max. no. of iterations
 
-   x0 = x; f0 = Func(x0)
+   x0 = x
+   f0 = Func(x0)
    x = x0 - f0                                          # first approximation
-   for it in range(1,itmax+1):
+   for _ in range(1,itmax+1):
       f = Func(x)
       df = (f-f0)/(x-x0)                             # approximate derivative
-      x0 = x; f0 = f                      # store abscissa and function value
+      x0 = x
+      f0 = f                      # store abscissa and function value
       dx = -f/df if fabs(df) > eps else -f                  # root correction
       x += dx                                             # new approximation
       if ((x < a) or (x > b)): return (x,1)   # [a,b] does not contain a root
       if (fabs(dx) <= eps*fabs(x)): return (x,0)          # check convergence
 
-   print("Secant: max. no. of iterations exceeded !"); return (x,2)
+   print("Secant: max. no. of iterations exceeded !")
+   return (x,2)
 
 #============================================================================
 def BirgeVieta(a, n, xx):
@@ -246,14 +255,12 @@ def NewtonSys(Func, x, n):
 
    f   = [0]*(n+1)
    dx  = [0]*(n+1)
-   jac = [[0]*(n+1) for i in range(n+1)]
+   jac = [[0]*(n+1) for _ in range(n+1)]
 
    for it in range(1,itmax+1):
       Func(f,x,n)                                                 # functions
       Jacobian(x,jac,n,Func)                                       # Jacobian
-      det = MatInv(jac,n)                                  # inverse Jacobian
-
-      if (det):                                                 # corrections
+      if det := MatInv(jac, n):
          for i in range(1,n+1):                       # non-singular Jacobian
             sum = 0e0
             for j in range(1,n+1): sum -= jac[i][j] * f[j]

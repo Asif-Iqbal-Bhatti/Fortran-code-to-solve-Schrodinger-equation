@@ -16,10 +16,12 @@ def Poisson0(u, x, y, nx, ny, eps, Func):
 #----------------------------------------------------------------------------
    itmax = 10000                                      # max no. of iterations
 
-   f = [[0]*(ny+1) for i in range(nx+1)]
+   f = [[0]*(ny+1) for _ in range(nx+1)]
 
-   hx = (x[nx]-x[1])/(nx-1); kx = 1e0/(hx*hx)                 # mesh spacings
-   hy = (y[ny]-y[1])/(ny-1); ky = 1e0/(hy*hy) 
+   hx = (x[nx]-x[1])/(nx-1)
+   kx = 1e0/(hx*hx)                 # mesh spacings
+   hy = (y[ny]-y[1])/(ny-1)
+   ky = 1e0/(hy*hy)
    kxy = 2e0*(kx + ky)
 
    for j in range(2,ny):                     # RHS of PDE for interior points
@@ -54,14 +56,20 @@ def PoissonXY(u, x, y, nx, ny, eps, Func, CondX, CondY):
 #----------------------------------------------------------------------------
    itmax = 10000                                      # max no. of iterations
 
-   f = [[0]*(ny+1) for i in range(nx+1)]
-   betXmin = [0]*(ny+1); betXmax = [0]*(ny+1)
-   gamXmin = [0]*(ny+1); gamXmax = [0]*(ny+1)
-   betYmin = [0]*(nx+1); betYmax = [0]*(nx+1)
-   gamYmin = [0]*(nx+1); gamYmax = [0]*(nx+1)
+   f = [[0]*(ny+1) for _ in range(nx+1)]
+   betXmin = [0]*(ny+1)
+   betXmax = [0]*(ny+1)
+   gamXmin = [0]*(ny+1)
+   gamXmax = [0]*(ny+1)
+   betYmin = [0]*(nx+1)
+   betYmax = [0]*(nx+1)
+   gamYmin = [0]*(nx+1)
+   gamYmax = [0]*(nx+1)
 
-   hx = (x[nx]-x[1])/(nx-1); kx = 1e0/(hx*hx)                 # mesh spacings
-   hy = (y[ny]-y[1])/(ny-1); ky = 1e0/(hy*hy) 
+   hx = (x[nx]-x[1])/(nx-1)
+   kx = 1e0/(hx*hx)                 # mesh spacings
+   hy = (y[ny]-y[1])/(ny-1)
+   ky = 1e0/(hy*hy)
    kxy = 2e0*(kx + ky)
 
    for j in range(2,ny):                     # RHS of PDE for interior points
@@ -135,10 +143,12 @@ def Poisson2D(u, x, y, imin, imax, nx, ny, eps, Func):
 #----------------------------------------------------------------------------
    itmax = 10000                                      # max no. of iterations
 
-   f = [[0]*(ny+1) for i in range(nx+1)]
+   f = [[0]*(ny+1) for _ in range(nx+1)]
 
-   hx = (x[nx]-x[1])/(nx-1); kx = 1e0/(hx*hx)                 # mesh spacings
-   hy = (y[ny]-y[1])/(ny-1); ky = 1e0/(hy*hy) 
+   hx = (x[nx]-x[1])/(nx-1)
+   kx = 1e0/(hx*hx)                 # mesh spacings
+   hy = (y[ny]-y[1])/(ny-1)
+   ky = 1e0/(hy*hy)
    kxy = 2e0*(kx + ky)
 
    for j in range(2,ny):                     # RHS of PDE for interior points
@@ -234,11 +244,14 @@ def PropagDiff(u0, u, D, nx, hx, ht, iopBC1, iopBC2, Jdiff1, Jdiff2):
 #  iopBC1, iopBC2 - left/right boundary condition: 0 - Dirichlet, 1 - Neumann
 #  Jdiff1, Jdiff2 - left/right boundary fluxes for Neumann conditions
 # ---------------------------------------------------------------------------
-   a = [0]*(nx+1); b = [0]*(nx+1); c = [0]*(nx+1)
+   a = [0]*(nx+1)
+   b = [0]*(nx+1)
+   c = [0]*(nx+1)
 
    f = 0.5e0 * ht/(hx*hx)
 
-   b[1] = 1e0; c[1] = -iopBC1      # build coefficients of discretized system
+   b[1] = 1e0
+   c[1] = -iopBC1      # build coefficients of discretized system
    u[1] = hx*Jdiff1/D[1] if iopBC1 else u0[1]
    for i in range(2,nx):
       lam = D[i] * f
@@ -249,26 +262,27 @@ def PropagDiff(u0, u, D, nx, hx, ht, iopBC1, iopBC2, Jdiff1, Jdiff2):
       c[i] = -lam2
       u[i] = lam1*u0[i-1] + (1e0 - 2e0*lam)*u0[i] + lam2*u0[i+1]
 
-   a[nx] = -iopBC2; b[nx] = 1e0
+   a[nx] = -iopBC2
+   b[nx] = 1e0
    u[nx] = -hx*Jdiff2/D[nx] if iopBC2 else u0[nx]
 
    TriDiagSys(a,b,c,u,nx)              # solve tridiagonal discretized system
 
-   for i in range(1,nx+1):                               # keep solution >= 0
-      if (u[i] < 0e0): u[i] = 0e0
+   for i in range(1,nx+1):                            # keep solution >= 0
+      u[i] = max(u[i], 0e0)
 
    uint0 = 0.5e0*(u0[1] + u0[nx])                  # integral of old solution
    for i in range(2,nx): uint0 += u0[i]                    # trapezoidal rule
    uint0 *= hx
    if (iopBC1 == 1): uint0 += Jdiff1*ht           # contribution of left flux
    if (iopBC2 == 1): uint0 -= Jdiff2*ht          # contribution of right flux
-   
+
    uint = 0.5e0*(u[1] + u[nx])                     # integral of new solution
    for i in range(2,nx): uint += u[i]                      # trapezoidal rule
    uint *= hx
 
    f = uint0/uint                                      # normalization factor
-   if (f < 0e0): f = 0e0
+   f = max(f, 0e0)
    for i in range(1,nx+1): u[i] *= f                     # normalize solution
 
 #============================================================================

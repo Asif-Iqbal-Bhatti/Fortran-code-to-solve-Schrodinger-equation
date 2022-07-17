@@ -4,10 +4,10 @@ from linsys import *
 from matutil import *
 
 n = 5                                                       # order of system
-a = [[0]*(n+1) for i in range(n+1)]                           # system matrix
-b = [[0]*(n+1) for i in range(n+1)]             # constant terms and solution
-c = [[0]*(n+1) for i in range(n+1)]                   # copy of system matrix
-d = [[0]*(n+1) for i in range(n+1)]                              # work array
+a = [[0]*(n+1) for _ in range(n+1)]
+b = [[0]*(n+1) for _ in range(n+1)]
+c = [[0]*(n+1) for _ in range(n+1)]
+d = [[0]*(n+1) for _ in range(n+1)]
 
 for i in range(1,n+1):                                        # random matrix
    for j in range(1,n+1): a[i][j] = random()

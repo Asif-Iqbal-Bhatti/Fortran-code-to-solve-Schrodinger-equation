@@ -16,11 +16,12 @@ def SpherY2(theta, phi):                        # squared spherical harmonics
 # main
 
 lmax = 5                                                    # maximum order l
-nt = 181; np = 3       # number of mesh points for angular Simpson quadrature
+nt = 181
+np = 3       # number of mesh points for angular Simpson quadrature
 
-for l in range(0,lmax+1):
-  for m in range(0,l+1):
-     NormL = qRomberg(aLegendre2,-1e0,1e0,1e-10)
-     NormY = qSimpsonAng(SpherY2,nt,np)
-     print("l = {0:d} m = {1:d} NormL = {2:13.10f} NormY = {3:13.10f}".
-           format(l,m,NormL,NormY))
+for l in range(lmax+1):
+   for m in range(l+1):
+      NormL = qRomberg(aLegendre2,-1e0,1e0,1e-10)
+      NormY = qSimpsonAng(SpherY2,nt,np)
+      print("l = {0:d} m = {1:d} NormL = {2:13.10f} NormY = {3:13.10f}".
+            format(l,m,NormL,NormY))

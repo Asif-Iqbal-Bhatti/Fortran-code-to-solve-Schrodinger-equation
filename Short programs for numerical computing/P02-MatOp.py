@@ -6,10 +6,10 @@ from matutil import *
 
 n = int(input("n = "))
 
-A = [[0]*(n+1) for i in range(n+1)]                           # define arrays
-B = [[0]*(n+1) for i in range(n+1)]
-C = [[0]*(n+1) for i in range(n+1)]
-D = [[0]*(n+1) for i in range(n+1)]
+A = [[0]*(n+1) for _ in range(n+1)]
+B = [[0]*(n+1) for _ in range(n+1)]
+C = [[0]*(n+1) for _ in range(n+1)]
+D = [[0]*(n+1) for _ in range(n+1)]
 
 for i in range(1,n+1):                 # array A: random sub-unitary elements
    for j in range(1,n+1): A[i][j] = random()

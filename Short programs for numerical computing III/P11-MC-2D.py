@@ -9,8 +9,9 @@ n = eval(input("n = "))                           # number of sampling points
 seed()
 
 ni = 0                                            # number of interior points
-for i in range(1,n+1):
-   x = random(); y = random()
+for _ in range(1,n+1):
+   x = random()
+   y = random()
    if (x*x + y*y <= 1e0): ni += 1                        # add interior point
 
 fi = ni/n                                       # fraction of interior points

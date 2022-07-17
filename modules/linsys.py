@@ -136,23 +136,26 @@ def GaussJordan(a, b, n, m):
 #  b   - matrix of constant terms (n x m); solution x on exit
 #  det - determinant of coefficient matrix (output).
 #----------------------------------------------------------------------------
-   ipivot = [0]*(n+1); jpivot = [0]*(n+1)     # stores pivot rows and columns
+   ipivot = [0]*(n+1)
+   jpivot = [0]*(n+1)     # stores pivot rows and columns
    npivot = [0]*(n+1)                              # marks used pivot columns
 
    det = 1e0
-   for k in range(1,n+1):                               # FORWARD ELIMINATION
+   for k in range(1,n+1):                            # FORWARD ELIMINATION
       amax = 0e0                                            # determine pivot
-      for i in range(1,n+1):                                 # loop over rows
+      for i in range(1,n+1):                           # loop over rows
          if (npivot[i] != 1):
-            for j in range(1,n+1):                        # loop over columns
-               if (npivot[j] == 0):                  # pivoting not yet done?
-                  if (amax < fabs(a[i][j])):
-                     amax = fabs(a[i][j]); imax = i; jmax = j
+            for j in range(1,n+1):            # loop over columns
+               if (npivot[j] == 0) and (amax < fabs(a[i][j])):
+                  amax = fabs(a[i][j])
+                  imax = i
+                  jmax = j
                if (npivot[j] > 1):
                   print("GaussJordan: singular matrix 1 !"); return 0e0
       if (amax == 0e0): print("GaussJordan: singular matrix 2 !"); return 0e0
 
-      ipivot[k] = imax; jpivot[k] = jmax         # store pivot row and column
+      ipivot[k] = imax
+      jpivot[k] = jmax         # store pivot row and column
       npivot[jmax] = npivot[jmax] + 1                # mark used pivot column
 
       if (imax != jmax):                     # interchange rows imax and jmax
@@ -252,7 +255,7 @@ def MatInv(a, n):
 #  det - determinant of coefficient matrix (output).
 #  Calls: LUFactor, LUSystem.
 #----------------------------------------------------------------------------
-   ainv = [[0]*(n+1) for i in range(n+1)]     # temporary storage for inverse
+   ainv = [[0]*(n+1) for _ in range(n+1)]
    b = [0]*(n+1)
    ipivot = [0]*(n+1)                                     # stores pivot rows
 
@@ -399,7 +402,7 @@ def GaussSeidel(a, b, x, n, init):
    eps = 1e-10                                 # relative precision criterion
    itmax = 1000                                       # max no. of iterations
 
-   s = [[0]*(n+1) for i in range(n+1)]           # matrices of reduced system
+   s = [[0]*(n+1) for _ in range(n+1)]
    t = [0]*(n+1)
 
    for i in range(1,n+1):                         # matrices of normal system

@@ -3,8 +3,8 @@ from eigsys import *
 from graphlib import *
 
 n = 100                                              # number of point masses
-a = [[0]*(n+1) for i in range(n+1)]                      # coefficient matrix
-x = [[0]*(n+1) for i in range(n+1)]            # eigenvectors = displacements
+a = [[0]*(n+1) for _ in range(n+1)]
+x = [[0]*(n+1) for _ in range(n+1)]
 d = [0]*(n+1)                                   # eigenvalues ~ frequencies^2
 xp = [0]*(n+1)                                     # mesh points for plotting
 yp = [0]*(n+1)                                 # function values for plotting

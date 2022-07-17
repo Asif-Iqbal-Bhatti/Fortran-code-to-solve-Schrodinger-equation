@@ -76,9 +76,10 @@ def RKadapt(t, ht, eps, y, n, Func):
    p = 4                                          # order of basic ODE solver
    itmax = 10                              # max. no. of step size reductions
 
-   yt = [0]*(n+1); yt2 = [0]*(n+1)
+   yt = [0]*(n+1)
+   yt2 = [0]*(n+1)
 
-   for it in range(1,itmax+1):                    # loop of step size scaling
+   for it in range(1,itmax+1):                 # loop of step size scaling
       ht2 = ht/2e0
       for i in range(1,n+1): yt2[i] = yt[i] = y[i]    # initialize trial sol.
       RungeKutta(t,ht,yt,n,Func)                                  # t -> t+ht
@@ -92,7 +93,7 @@ def RKadapt(t, ht, eps, y, n, Func):
 
       f = 1e0                                  # scaling factor for step size
       if (err): f = 0.9e0*pow(eps/err,1e0/p)
-      if (f > 5e0): f = 5e0                           # prevent increase > 5x
+      f = min(f, 5e0)
       ht1 = f * ht                                 # guess for next step size
       if (err <= eps): break                       # precision attained: exit
       ht = ht1                                  # reduce step size and repeat
@@ -116,22 +117,46 @@ def RKFehlberg(t, ht, eps, y, n, Func):
 #----------------------------------------------------------------------------
    p = 5                                          # order of basic ODE solver
    itmax = 10                              # max. no. of step size reductions
-                                          # Runge-Kutta-Fehlberg coefficients
-   a2 = 1e0/4e0; a3 = 3e0/8e0; a4 = 12e0/13e0; a5 = 1e0; a6 = 1e0/2e0
-   b21 = 1e0/4e0; b31 = 3e0/32e0; b32 = 9e0/32e0
-   b41 = 1932e0/2197e0; b42 = -7200e0/2197e0; b43 = 7296e0/2197e0
-   b51 = 439e0/216e0; b52 = -8e0; b53 = 3680e0/513e0; b54 = -845e0/4104e0
-   b61 = -8e0/27e0; b62 = 2e0; b63 = -3544e0/2565e0; b64 = 1859e0/4104e0
+   a2 = 1e0/4e0
+   a3 = 3e0/8e0
+   a4 = 12e0/13e0
+   a5 = 1e0
+   a6 = 1e0/2e0
+   b21 = 1e0/4e0
+   b31 = 3e0/32e0
+   b32 = 9e0/32e0
+   b41 = 1932e0/2197e0
+   b42 = -7200e0/2197e0
+   b43 = 7296e0/2197e0
+   b51 = 439e0/216e0
+   b52 = -8e0
+   b53 = 3680e0/513e0
+   b54 = -845e0/4104e0
+   b61 = -8e0/27e0
+   b62 = 2e0
+   b63 = -3544e0/2565e0
+   b64 = 1859e0/4104e0
    b65 = -11e0/40e0
-   c1 = 16e0/135e0; c3 = 6656e0/12825e0; c4 = 28561e0/56430e0
-   c5 = -9e0/50e0; c6 = 2e0/55e0
-   e1 = 1e0/360e0; e3 = -128e0/4275e0; e4 = -2197e0/75240e0
-   e5 = 1e0/50e0; e6 = 2e0/55e0
+   c1 = 16e0/135e0
+   c3 = 6656e0/12825e0
+   c4 = 28561e0/56430e0
+   c5 = -9e0/50e0
+   c6 = 2e0/55e0
+   e1 = 1e0/360e0
+   e3 = -128e0/4275e0
+   e4 = -2197e0/75240e0
+   e5 = 1e0/50e0
+   e6 = 2e0/55e0
 
-   f1 = [0]*(n+1); f2 = [0]*(n+1); f3 = [0]*(n+1); f4 = [0]*(n+1)
-   f5 = [0]*(n+1); f6 = [0]*(n+1); yt = [0]*(n+1)
+   f1 = [0]*(n+1)
+   f2 = [0]*(n+1)
+   f3 = [0]*(n+1)
+   f4 = [0]*(n+1)
+   f5 = [0]*(n+1)
+   f6 = [0]*(n+1)
+   yt = [0]*(n+1)
 
-   for it in range(1,itmax+1):                    # loop of step size scaling
+   for it in range(1,itmax+1):                 # loop of step size scaling
       Func(t,y,f1)
       for i in range(1,n+1):
          yt[i] = y[i] + ht*b21*f1[i]
@@ -161,7 +186,7 @@ def RKFehlberg(t, ht, eps, y, n, Func):
 
       f = 1e0                                  # scaling factor for step size
       if (err): f = 0.9e0*pow(eps/err,1e0/p)
-      if (f > 5e0): f = 5e0                           # prevent increase > 5x
+      f = min(f, 5e0)
       ht1 = f * ht                                 # guess for next step size
       if (err <= eps): break                       # precision attained: exit
       ht = ht1                                  # reduce step size and repeat
@@ -356,6 +381,13 @@ def Propag(x, y, nx, y0, dy0, Func):
 
 #============================================================================
 def Shoot(x, y, nx, ya, yb, dy1, dy2, eps, Func):
+   Propag(x,y,nx,ya,dy1,Func)                           # propagate y for dy1
+   f1 = y[nx] - yb                                          # deviation at xb
+   Propag(x,y,nx,ya,dy2,Func)                           # propagate y for dy2
+   f2 = y[nx] - yb                                          # deviation at xb
+
+   if (f1*f2 < 0):                       # check if dy exists in [dy1,dy2]
+      exist = 1
 #----------------------------------------------------------------------------
 #  Solves a two-point boundary-value problem for a 2nd order ODE
 #     y" = f(x,y,y'), y(xa) = ya, y(xb) = yb
@@ -365,15 +397,8 @@ def Shoot(x, y, nx, ya, yb, dy1, dy2, eps, Func):
 #  an existence flag.
 #  Calls: Propag(x, y, nx, y0, dy0, Func); Func(x, y, dy) - RHS of ODE
 #----------------------------------------------------------------------------
-   itmax = 100                                    # max. number of bisections
+      itmax = 100                                    # max. number of bisections
 
-   Propag(x,y,nx,ya,dy1,Func)                           # propagate y for dy1
-   f1 = y[nx] - yb                                          # deviation at xb
-   Propag(x,y,nx,ya,dy2,Func)                           # propagate y for dy2
-   f2 = y[nx] - yb                                          # deviation at xb
-
-   if (f1*f2 < 0):                          # check if dy exists in [dy1,dy2]
-      exist = 1
       for it in range(1,itmax+1):                    # refine dy by bisection
          dy = 0.5e0*(dy1 + dy2)                           # new approximation
          Propag(x,y,nx,ya,dy,Func)                              # propagate y
@@ -390,6 +415,13 @@ def Shoot(x, y, nx, ya, yb, dy1, dy2, eps, Func):
 
 #============================================================================
 def ShootQM(E1, E2, V, x, y, nx, nc, y0, dy0, eps):
+   inf = Numerov(E1,V,x,y,nx,y0,dy0)                     # propagate y for E1
+   f1 = y[inf]                                                 # asymptotic y
+   inf = Numerov(E2,V,x,y,nx,y0,dy0)                     # propagate y for E2
+   f2 = y[inf]                                                 # asymptotic y
+
+   if (f1*f2 < 0):                          # check if exists E in [E1,E2]
+      exist = 1
 #----------------------------------------------------------------------------
 #  Solves the two-point eigenvalue problem for the 1D Schrodinger equation
 #     y" = (2m/h^2) [V(x) - E] y, y(0) = y0, y(+inf) = 0
@@ -399,15 +431,8 @@ def ShootQM(E1, E2, V, x, y, nx, nc, y0, dy0, eps):
 #  and the existence flag exist.
 #  Calls: Numerov(V, x, y, nx, y0, dy0, E)
 #----------------------------------------------------------------------------
-   itmax = 100                                    # max. number of bisections
+      itmax = 100                                    # max. number of bisections
 
-   inf = Numerov(E1,V,x,y,nx,y0,dy0)                     # propagate y for E1
-   f1 = y[inf]                                                 # asymptotic y
-   inf = Numerov(E2,V,x,y,nx,y0,dy0)                     # propagate y for E2
-   f2 = y[inf]                                                 # asymptotic y
-
-   if (f1*f2 < 0):                             # check if exists E in [E1,E2]
-      exist = 1
       for it in range(1,itmax+1):                     # refine E by bisection
          E = 0.5e0*(E1 + E2)                              # new approximation
          inf = Numerov(E,V,x,y,nx,y0,dy0)                       # propagate y

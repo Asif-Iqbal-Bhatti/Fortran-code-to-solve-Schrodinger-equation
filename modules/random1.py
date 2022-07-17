@@ -62,7 +62,8 @@ def randNrm():
 #  using the central limit theorem and sums of 12 uniform random numbers
 #----------------------------------------------------------------------------
    sum = 0e0
-   for i in range(1,13): sum += random()
+   for _ in range(1,13):
+      sum += random()
    x = sum - 6e0
    w = 0.398942280401433 * exp(-0.5e0*x*x)         # 1/sqrt(2*pi) = 0.3989...
    return (w, x)

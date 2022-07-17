@@ -4,15 +4,17 @@ from integral import *
 
 def Func(x): return sin(x)                                        # integrand
 
-a = 0e0; b = pi                                          # integration domain
+a = 0e0
+b = pi                                          # integration domain
 
 I = cos(a) - cos(b)                                            # exact result
 print("Exact result = ",I)
 print("   n       IT        errT   facT      IS        errS   facS")
 
 n = 1
-errT0 = 1e0; errS0 = 1e0
-for i in range(1,11):
+errT0 = 1e0
+errS0 = 1e0
+for _ in range(1,11):
    n = 2*n                                              # number of intervals
 
    IT = qTrapz(Func,a,b,n+1)                               # trapezoidal rule
@@ -26,4 +28,5 @@ for i in range(1,11):
    print(("{0:5d}{1:11.6f}{2:10.1e}{3:6.1f}{4:11.6f}{5:10.1e}{6:6.1f}").
          format(n,IT,errT,facT,IS,errS,facS))
 
-   errT0 = errT; errS0 = errS
+   errT0 = errT
+   errS0 = errS

@@ -20,7 +20,7 @@ def PolyDerive(a, b, n):
 #  For the real polynomial P(x) = a[0] x^n + ... + a[n], the function returns
 #  the coefficients of the derivative P'(x) = b[0] x^(n-1) + ... + b[n-1]
 #----------------------------------------------------------------------------
-   for i in range(0,n+1): b[i] = (n-i) * a[i]
+   for i in range(n+1): b[i] = (n-i) * a[i]
 
 #============================================================================
 def PolyDivide(x0, a, b, n):
@@ -38,7 +38,7 @@ def Exp0(x):
 #  Evaluates exp(x) from its power-series expansion
 #----------------------------------------------------------------------------
    eps = 1e-14                                           # relative precision
-   
+
    i = 0
    f = t = 1e0
    while (fabs(t) > eps*fabs(f)):
@@ -55,7 +55,7 @@ def Exp(x):
 #  For x < 0 avoids potential instabilities due to subtractions
 #----------------------------------------------------------------------------
    eps = 1e-14                                           # relative precision
-   
+
    i = 0
    f = t = 1e0
    absx = fabs(x)
@@ -72,7 +72,7 @@ def Sin(x):
 #  Evaluates sin(x) from its power-series expansion
 #----------------------------------------------------------------------------
    eps = 1e-14                                           # relative precision
-   
+
    i = 1
    f = t = x
    x2 = x*x
@@ -89,7 +89,7 @@ def ArcSin(x):
 #  Evaluates arcsin(x) from its power-series expansion
 #----------------------------------------------------------------------------
    eps = 1e-14                                           # relative precision
-   
+
    i = 1
    f = t = x
    x2 = x*x

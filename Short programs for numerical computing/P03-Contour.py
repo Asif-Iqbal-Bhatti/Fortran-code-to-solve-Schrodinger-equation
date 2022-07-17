@@ -7,10 +7,14 @@ def Func(x, y):                                      # function to be plotted
 
 # main
 
-xmin = -pi; xmax = pi; ymin = -pi; ymax = pi              # domain boundaries
-nx = 41; ny = 41                                      # number of mesh points
+xmin = -pi
+xmax = pi
+ymin = -pi
+ymax = pi              # domain boundaries
+nx = 41
+ny = 41                                      # number of mesh points
 
-u = [[0]*(ny+1) for i in range(nx+1)]              # array of function values
+u = [[0]*(ny+1) for _ in range(nx+1)]
 
 hx = (xmax-xmin)/(nx-1)                                      # x-mesh spacing
 hy = (ymax-ymin)/(ny-1)                                      # y-mesh spacing
