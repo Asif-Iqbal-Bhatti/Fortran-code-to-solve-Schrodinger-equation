@@ -2,14 +2,20 @@
 from eigsys import *
 
 n = 4
-a = [[0]*(n+1) for i in range(n+1)]
-x = [[0]*(n+1) for i in range(n+1)]
+a = [[0]*(n+1) for _ in range(n+1)]
+x = [[0]*(n+1) for _ in range(n+1)]
 d = [0]*(n+1)
 
 a[1][1] = 1                                                  # lower triangle
-a[2][1] = 2; a[2][2] = 1
-a[3][1] = 3; a[3][2] = 2; a[3][3] = 1
-a[4][1] = 4; a[4][2] = 3; a[4][3] = 2; a[4][4] = 1
+a[2][1] = 2
+a[2][2] = 1
+a[3][1] = 3
+a[3][2] = 2
+a[3][3] = 1
+a[4][1] = 4
+a[4][2] = 3
+a[4][3] = 2
+a[4][4] = 1
 # Eigenvalues: -3.414214, -1.099019, -0.585786, 9.099020
 
 for i in range(2,n+1):                              # complete upper triangle

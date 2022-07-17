@@ -69,32 +69,31 @@ def QuickSort(x, l, n):
 nf = 100                                                     # scaling factor
 np = 50                                           # number of plotting points
 ns = nf * np                             # max. number of values to be sorted
-x = [0]*(ns+1); x0 = [0]*(ns+1)                 # array to be sorted and copy
+x = [0]*(ns+1)
+x0 = [0]*(ns+1)                 # array to be sorted and copy
 
-out = open("sort.txt","w")                                 # open output file
-out.write("       n            Bubble              "
-            "Insertion           Quick\n")
-out.write("               ncomp     nsave     ncomp"
-          "     nsave     ncomp     nsave\n")
-for ip in range(1,np+1):
-   n = nf * ip                                # number of values to be sorted
-   print("n = ",n)
+with open("sort.txt","w") as out:
+   out.write("       n            Bubble              "
+               "Insertion           Quick\n")
+   out.write("               ncomp     nsave     ncomp"
+             "     nsave     ncomp     nsave\n")
+   for ip in range(1,np+1):
+      n = nf * ip                                # number of values to be sorted
+      print("n = ",n)
 
-   for i in range(1,n+1): x0[i] = random()                # list to be sorted
+      for i in range(1,n+1): x0[i] = random()                # list to be sorted
 
-   for i in range(1,n+1): x[i] = x0[i]
-   ncomp = 0; nsave = 0
-   BubbleSort(x,n)
-   out.write("{0:10d}{1:10d}{2:10d}".format(n,ncomp,nsave))
+      for i in range(1,n+1): x[i] = x0[i]
+      ncomp = 0; nsave = 0
+      BubbleSort(x,n)
+      out.write("{0:10d}{1:10d}{2:10d}".format(n,ncomp,nsave))
 
-   for i in range(1,n+1): x[i] = x0[i]
-   ncomp = 0; nsave = 0
-   InsertSort(x,n)
-   out.write("{0:10d}{1:10d}".format(ncomp,nsave))
+      for i in range(1,n+1): x[i] = x0[i]
+      ncomp = 0; nsave = 0
+      InsertSort(x,n)
+      out.write("{0:10d}{1:10d}".format(ncomp,nsave))
 
-   for i in range(1,n+1): x[i] = x0[i]
-   ncomp = 0; nsave = 0
-   QuickSort(x,1,n)
-   out.write("{0:10d}{1:10d}\n".format(ncomp,nsave))
-
-out.close()
+      for i in range(1,n+1): x[i] = x0[i]
+      ncomp = 0; nsave = 0
+      QuickSort(x,1,n)
+      out.write("{0:10d}{1:10d}\n".format(ncomp,nsave))

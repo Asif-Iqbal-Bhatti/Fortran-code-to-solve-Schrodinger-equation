@@ -6,7 +6,8 @@ from random import *
 
 n = 12                                        # number of values to be sorted
 x = [0]*(n+1)                                            # array to be sorted
-ind = [0]*(n+1); rnk = [0]*(n+1)                # arrays of indexes and ranks
+ind = [0]*(n+1)
+rnk = [0]*(n+1)                # arrays of indexes and ranks
 
 print("Original array:")
 for i in range(1,n+1):
@@ -19,19 +20,18 @@ Rank(ind,rnk,n)                                       # create array of ranks
 
 print("Quartile 1")
 print("     i   ind   rnk        x")
-for i in range(1,int(n/4)+1):
+for i in range(1, n // 4 + 1):
    indi = ind[i]
-   print("{0:6d}{1:6d}{2:6d}{3:10.2f}".format(i,ind[i],rnk[indi],x[indi]))
-
+   print("{0:6d}{1:6d}{2:6d}{3:10.2f}".format(i, indi, rnk[indi], x[indi]))
 print("Quartile 2")
 print("     i   ind   rnk        x")
-for i in range(int(n/4)+1,int(n/2)+1):
+for i in range(n // 4 + 1, n // 2 + 1):
    indi = ind[i]
    print("{0:6d}{1:6d}{2:6d}{3:10.2f}".format(i,ind[i],rnk[indi],x[indi]))
 
 print("Quartile 3")
 print("     i   ind   rnk        x")
-for i in range(int(n/2)+1,int(3*n/4)+1):
+for i in range(n // 2 + 1, int(3*n/4)+1):
    indi = ind[i]
    print("{0:6d}{1:6d}{2:6d}{3:10.2f}".format(i,ind[i],rnk[indi],x[indi]))
 

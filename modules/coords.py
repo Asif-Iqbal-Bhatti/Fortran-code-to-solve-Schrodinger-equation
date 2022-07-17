@@ -27,8 +27,8 @@ def PrincipalAxes(m, x, y, z, n, isort):
 #  isort =  1 - highest symmetry axis along x-axis
 #  isort = -1 - highest symmetry axis along z-axis
 #----------------------------------------------------------------------------
-   Inert = [[0]*4 for i in range(4)]
-   Rot   = [[0]*4 for i in range(4)]
+   Inert = [[0]*4 for _ in range(4)]
+   Rot = [[0]*4 for _ in range(4)]
    MomInert = [0]*4
 
    for i in range(1,4):

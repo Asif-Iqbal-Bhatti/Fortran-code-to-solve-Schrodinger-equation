@@ -93,9 +93,10 @@ def qRomberg(Func, a, b, eps = 1e-6):
    r1 = [0]*(kmax+1)                                  # two consecutive lines
    r2 = [0]*(kmax+1)                                  # from the method table
 
-   h = b-a; n = 1
+   h = b-a
+   n = 1
    r1[0] = 0.5*h*(Func(a) + Func(b))                  # initial approximation
-   for k in range(1,kmax+1):                              # step halving loop
+   for k in range(1,kmax+1):                           # step halving loop
       sumf = 0e0
       for i in range(1,n+1): sumf += Func(a+(i-0.5)*h)
       r2[0] = 0.5*(r1[0] + h*sumf)                        # trapezoid formula
@@ -107,8 +108,9 @@ def qRomberg(Func, a, b, eps = 1e-6):
       if (k > 1):                                         # convergence check
          if (fabs(r2[k]-r1[k-1]) <= eps*fabs(r2[k])): break
          if (fabs(r2[k]) <= eps and fabs(r2[k]) <= fabs(r2[k]-r1[k-1])):break
-      h *= 0.5; n *= 2                               # halve integration step
-      for j in range(0,k+1): r1[j] = r2[j]                # shift table lines
+      h *= 0.5
+      n *= 2                               # halve integration step
+      for j in range(k+1): r1[j] = r2[j]                # shift table lines
 
    if (k >= kmax):
       print("qRomberg: max. no. of iterations exceeded !")
@@ -210,7 +212,7 @@ def xGaussLeg(a, b, n):
    x = [0]*n
    w = [0]*n
 
-   for i in range (0,n2):
+   for i in range(n2):
       xi = cos(pi*(i+1-0.25e0)/(n+0.5e0))   # initial approximation for zeros
       f = 9e99
       while (fabs(f) > eps*fabs(xi)):             # Newton-Raphson refinement
@@ -224,8 +226,9 @@ def xGaussLeg(a, b, n):
       x[n2] = 0e0
       w[n2] = 2e0/(d*d)
 
-   f = 0.5e0*(b-a); xc = 0.5e0*(b+a)              # scaling to interval [a,b]
-   for i in range (0,n):
+   f = 0.5e0*(b-a)
+   xc = 0.5e0*(b+a)              # scaling to interval [a,b]
+   for i in range(n):
       x[i] = f*x[i] + xc
       w[i] = f*w[i]
 
@@ -244,7 +247,7 @@ def qGaussLeg(Func, a, b, n):
    (x,w) = xGaussLeg(a,b,n)
 
    s = 0e0
-   for i in range(0,n): s += w[i] * Func(x[i])
+   for i in range(n): s += w[i] * Func(x[i])
 
    return s
 
@@ -261,7 +264,7 @@ def xGaussLag(a, n):
    x = [0]*n
    w = [0]*n
 
-   for i in range(0,n):
+   for i in range(n):
       if (i == 0):       # initial approximation for zeros (Stroud & Secrest)
          xi = 3e0/(1e0+2.4e0*n)                                    # 1st zero
       elif (i == 1):
@@ -276,8 +279,8 @@ def xGaussLag(a, n):
          xi -= f
       x[i] = xi
       w[i] = exp(xi)/(xi*d*d)
-             
-   for i in range(0,n): x[i] += a              # scaling to interval [a,+inf)
+
+   for i in range(n): x[i] += a              # scaling to interval [a,+inf)
 
    return (x,w)
 
@@ -294,7 +297,7 @@ def qGaussLag(Func, a, n):
    (x,w) = xGaussLag(a,n)
 
    s = 0e0
-   for i in range(0,n): s += w[i] * Func(x[i])
+   for i in range(n): s += w[i] * Func(x[i])
 
    return s
 
@@ -309,13 +312,15 @@ def qTrapz3D(Func, ax, bx, nx, ay, by, ny, az, bz, nz):
    hz = (bz-az)/(nz-1)
 
    s = 0e0
-   for i in range(0,nx):
-      x = ax + i*hx; wx = (hx if i*(i+1-nx) else 0.5e0*hx)
+   for i in range(nx):
+      x = ax + i*hx
+      wx = (hx if i*(i+1-nx) else 0.5e0*hx)
       sx = 0e0
-      for j in range(0,ny):
-         y = ay + j*hy; wy = (hy if j*(j+1-ny) else 0.5e0*hy)
+      for j in range(ny):
+         y = ay + j*hy
+         wy = (hy if j*(j+1-ny) else 0.5e0*hy)
          sy = 0e0
-         for k in range(0,nz):
+         for k in range(nz):
             z = az + k*hz; wz = (hz if k*(k+1-nz) else 0.5e0*hz)
             sy += wz * Func(x,y,z)
          sx += wy * sy
@@ -329,14 +334,17 @@ def xSimpson(a, b, n):
 #  Calculates abscissas x[] and weights w[] for Simpson's rule with n
 #  integration points on interval [a,b]
 #----------------------------------------------------------------------------
-   c13 = 1e0/3e0; c23 = 2e0/3e0; c43 = 4e0/3e0
+   c13 = 1e0/3e0
+   c23 = 2e0/3e0
+   c43 = 4e0/3e0
 
    if (n % 2 == 0): n += 1                              # increment n if even
 
-   x = [0]*n; w = [0]*n
+   x = [0]*n
+   w = [0]*n
 
    h = (b-a)/(n-1)
-   for i in range(0,n):
+   for i in range(n):
       x[i] = a + i*h; w[i] = h * (c23 if (i+1) % 2 else c43)
    w[0] = w[n-1] = h * c13
 
@@ -352,20 +360,23 @@ def qSimpson3D(Func, ax, bx, nx, ay, by, ny, az, bz, nz):
    if (ny % 2 == 0): ny += 1                           # increment ny if even
    if (nz % 2 == 0): nz += 1                           # increment nz if even
 
-   x = [0]*nx; wx = [0]*nx
-   y = [0]*ny; wy = [0]*ny
-   z = [0]*nz; wz = [0]*nz
-   
+   x = [0]*nx
+   wx = [0]*nx
+   y = [0]*ny
+   wy = [0]*ny
+   z = [0]*nz
+   wz = [0]*nz
+
    (x,wx) = xSimpson(ax,bx,nx)                  # generate integartion points
    (y,wy) = xSimpson(ay,by,ny)
    (z,wz) = xSimpson(az,bz,nz)
 
    s = 0e0
-   for i in range(0,nx):
+   for i in range(nx):
       sx = 0e0
-      for j in range(0,ny):
+      for j in range(ny):
          sy = 0e0
-         for k in range(0,nz):
+         for k in range(nz):
             sy += wz[k] * Func(x[i],y[j],z[k])
          sx += wy[j] * sy
       s += wx[i] * sx
@@ -378,20 +389,23 @@ def qGaussLeg3D(Func, ax, bx, nx, ay, by, ny, az, bz, nz):
 #  Integrates function Func(x,y,z) in the cuboid [ax,bx] x [ay,by] x [az,bz]
 #  using Gauss-Legendre quadratures with (nx x ny x nz) integration points
 #----------------------------------------------------------------------------
-   x = [0]*nx; wx = [0]*nx
-   y = [0]*ny; wy = [0]*ny
-   z = [0]*nz; wz = [0]*nz
+   x = [0]*nx
+   wx = [0]*nx
+   y = [0]*ny
+   wy = [0]*ny
+   z = [0]*nz
+   wz = [0]*nz
 
    (x,wx) = xGaussLeg(ax,bx,nx)                 # generate integartion points
    (y,wy) = xGaussLeg(ay,by,ny)
    (z,wz) = xGaussLeg(az,bz,nz)
 
    s = 0e0
-   for i in range(0,nx):
+   for i in range(nx):
       sx = 0e0
-      for j in range(0,ny):
+      for j in range(ny):
          sy = 0e0
-         for k in range(0,nz):
+         for k in range(nz):
             sy += wz[k] * Func(x[i],y[j],z[k])
          sx += wy[j] * sy
       s += wx[i] * sx
@@ -407,18 +421,20 @@ def qSimpsonAng(Func, nt, np):
    if (nt % 2 == 0): nt += 1                           # increment nt if even
    if (np % 2 == 0): np += 1                           # increment np if even
 
-   t = [0]*nt; wt = [0]*nt
-   p = [0]*np; wp = [0]*np
+   t = [0]*nt
+   wt = [0]*nt
+   p = [0]*np
+   wp = [0]*np
 
    (t,wt) = xSimpson(0e0,pi,nt)
    (p,wp) = xSimpson(0e0,2e0*pi,np)
 
-   for i in range(0,nt): wt[i] *= sin(t[i])                  # volume element
+   for i in range(nt): wt[i] *= sin(t[i])                  # volume element
 
    s = 0e0
-   for i in range(0,nt):
+   for i in range(nt):
       st = 0e0
-      for j in range(0,np):
+      for j in range(np):
          st += wp[j] * Func(t[i],p[j])
       s += wt[i] * st
 
@@ -434,23 +450,26 @@ def qSimpsonSph(Func, a, nr, nt, np):
    if (nt % 2 == 0): nt += 1                           # increment nt if even
    if (np % 2 == 0): np += 1                           # increment np if even
 
-   r = [0]*nr; wr = [0]*nr
-   t = [0]*nt; wt = [0]*nt
-   p = [0]*np; wp = [0]*np
+   r = [0]*nr
+   wr = [0]*nr
+   t = [0]*nt
+   wt = [0]*nt
+   p = [0]*np
+   wp = [0]*np
 
    (r,wr) = xSimpson(0e0,a,nr)                  # generate integartion points
    (t,wt) = xSimpson(0e0,pi,nt)
    (p,wp) = xSimpson(0e0,2e0*pi,np)
 
-   for i in range(0,nr): wr[i] *= r[i] * r[i]                # factors from
-   for j in range(0,nt): wt[j] *= sin(t[j])                  # volume element
+   for i in range(nr): wr[i] *= r[i] * r[i]                # factors from
+   for j in range(nt): wt[j] *= sin(t[j])                  # volume element
 
    s = 0e0
-   for i in range(0,nr):
+   for i in range(nr):
       sr = 0e0
-      for j in range(0,nt):
+      for j in range(nt):
          st = 0e0
-         for k in range(0,np):
+         for k in range(np):
             st += wp[k] * Func(r[i],t[j],p[k])
          sr += wt[j] * st
       s += wr[i] * sr
@@ -464,23 +483,26 @@ def qGaussSph(Func, nr, nt, np):
 #  in spherical coordinates using Gauss-Laguerre and Gauss-Legendre formulas
 #  with (nr x nt x np) points
 #----------------------------------------------------------------------------
-   r = [0]*nr; wr = [0]*nr
-   t = [0]*nt; wt = [0]*nt
-   p = [0]*np; wp = [0]*np
+   r = [0]*nr
+   wr = [0]*nr
+   t = [0]*nt
+   wt = [0]*nt
+   p = [0]*np
+   wp = [0]*np
 
    (r,wr) = xGaussLag(0e0,nr)              # Gauss-Laguerre radial quadrature
    (t,wt) = xGaussLeg(0e0,pi,nt)         # Gauss-Legendre angular quadratures
    (p,wp) = xGaussLeg(0e0,2e0*pi,np)
 
-   for i in range(0,nr): wr[i] *= r[i] * r[i]                # factors from
-   for j in range(0,nt): wt[j] *= sin(t[j])                  # volume element
+   for i in range(nr): wr[i] *= r[i] * r[i]                # factors from
+   for j in range(nt): wt[j] *= sin(t[j])                  # volume element
 
    s = 0e0
-   for i in range(0,nr):
+   for i in range(nr):
       sr = 0e0
-      for j in range(0,nt):
+      for j in range(nt):
          st = 0e0
-         for k in range(0,np):
+         for k in range(np):
             st += wp[k] * Func(r[i],t[j],p[k])
          sr += wt[j] * st
       s += wr[i] * sr
@@ -497,22 +519,25 @@ def qSimpsonCyl(Func, a, az, bz, nr, np, nz):
    if (np % 2 == 0): np += 1                           # increment np if even
    if (nz % 2 == 0): nz += 1                           # increment nz if even
 
-   r = [0]*nr; wr = [0]*nr
-   p = [0]*np; wp = [0]*np
-   z = [0]*nz; wz = [0]*nz
+   r = [0]*nr
+   wr = [0]*nr
+   p = [0]*np
+   wp = [0]*np
+   z = [0]*nz
+   wz = [0]*nz
 
    (r,wr) = xSimpson(0e0,a,nr)                  # generate integartion points
    (p,wp) = xSimpson(0e0,2e0*pi,np)
    (z,wz) = xSimpson(az,bz,nz)
 
-   for i in range(0,nr): wr[i] *= r[i]           # factor from volume element
+   for i in range(nr): wr[i] *= r[i]           # factor from volume element
 
    s = 0e0
-   for i in range(0,nr):
+   for i in range(nr):
       sr = 0e0
-      for j in range(0,np):
+      for j in range(np):
          sp = 0e0
-         for k in range(0,nz):
+         for k in range(nz):
             sp += wz[k] * Func(r[i],p[j],z[k])
          sr += wp[j] * sp
       s += wr[i] * sr

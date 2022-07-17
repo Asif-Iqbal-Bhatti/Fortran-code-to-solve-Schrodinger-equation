@@ -15,7 +15,8 @@ nx   = 21                                     # number of spatial mesh points
 tmax = 6.0e0                                               # propagation time
 ht   = 1.25e-2                                                    # time step
 
-u0 = [0]*(nx+1); u = [0]*(nx+1)                                    # solution 
+u0 = [0]*(nx+1)
+u = [0]*(nx+1)                                    # solution 
 x = [0]*(nx+1)                                                 # spatial mesh
 
 hx = L/(nx-1)
@@ -30,15 +31,13 @@ while (t < tmax):                                             # temporal loop
 
    for i in range(1,nx): u0[i] = u[i]                       # shift solutions
 
-out = open("diffusion.txt","w")                            # open output file
-out.write(("lambda = {0:f} t = {1:f}\n").format(D*ht/(hx*hx),t))
-out.write("      x         u       exact\n")
-f = exp(-pi*pi*D*t/(L*L))
-for i in range(1,nx+1):
-   out.write(("{0:10.5f}{1:10.5f}{2:10.5f}\n"). \
-             format(x[i],u[i],f*sin(pi*x[i]/L)))
-out.close()
-
+with open("diffusion.txt","w") as out:
+   out.write(("lambda = {0:f} t = {1:f}\n").format(D*ht/(hx*hx),t))
+   out.write("      x         u       exact\n")
+   f = exp(-pi*pi*D*t / L**2)
+   for i in range(1,nx+1):
+      out.write(("{0:10.5f}{1:10.5f}{2:10.5f}\n"). \
+                format(x[i],u[i],f*sin(pi*x[i]/L)))
 GraphInit(800,600)
 Plot(x,u,nx,"blue",1,0.15,0.95,0.15,0.85,"x","u","Diffusion")
 MainLoop()

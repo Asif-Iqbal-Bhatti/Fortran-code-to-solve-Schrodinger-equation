@@ -4,28 +4,26 @@ from matutil import *
 
 n = 13
 
-C = [[0]*(n+1) for i in range(n+1)]                  # molecular coefficients
-F = [[0]*(n+1) for i in range(n+1)]                             # Fock matrix
-S = [[0]*(n+1) for i in range(n+1)]                          # overlap matrix
-S0 = [[0]*(n+1) for i in range(n+1)]          # backup copy of overlap matrix
+C = [[0]*(n+1) for _ in range(n+1)]
+F = [[0]*(n+1) for _ in range(n+1)]
+S = [[0]*(n+1) for _ in range(n+1)]
+S0 = [[0]*(n+1) for _ in range(n+1)]
 E = [0]*(n+1)                                                 # energy levels
 
-f = open('H2O.dat','r')                                     # read in F and S
-line = f.readline()                                             # skip header
-for i in range(1,n+1):                          # read in lower triangle of F
-   line = f.readline()                              # F not altered by EigSym
-   for j in range(1,i+1):
-      F[i][j] = float(line.split()[j-1])
-      F[j][i] = F[i][j]                                          # symmetrize
+with open('H2O.dat','r') as f:
+   line = f.readline()                                             # skip header
+   for i in range(1,n+1):                          # read in lower triangle of F
+      line = f.readline()                              # F not altered by EigSym
+      for j in range(1,i+1):
+         F[i][j] = float(line.split()[j-1])
+         F[j][i] = F[i][j]                                          # symmetrize
 
-line = f.readline()                                             # skip header
-for i in range(1,n+1):
-   line = f.readline()
-   for j in range(1,i+1):                       # read in lower triangle of S
-      S[i][j] = float(line.split()[j-1])              # S destroyed by EigSym
-      S0[i][j] = S0[j][i] = S[i][j]                                # backup S
-f.close()
-
+   line = f.readline()                                             # skip header
+   for i in range(1,n+1):
+      line = f.readline()
+      for j in range(1,i+1):                       # read in lower triangle of S
+         S[i][j] = float(line.split()[j-1])              # S destroyed by EigSym
+         S0[i][j] = S0[j][i] = S[i][j]                                # backup S
 print("F: Fock matrix (sample)")
 MatPrint(F,5,5)
 print("S: overlap matrix (sample)")

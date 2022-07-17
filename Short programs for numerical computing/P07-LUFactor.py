@@ -4,8 +4,8 @@ from linsys import *
 from matutil import *
 
 n = 5                                                       # order of system
-a  = [[0]*(n+1) for i in range(n+1)]                          # system matrix
-a0 = [[0]*(n+1) for i in range(n+1)]                          # backup matrix
+a = [[0]*(n+1) for _ in range(n+1)]
+a0 = [[0]*(n+1) for _ in range(n+1)]
 b = [0]*(n+1)                                                # constant terms
 x = [0]*(n+1)                                                      # solution
 ipivot = [0]*(n+1)                                                   # pivots
@@ -19,7 +19,7 @@ det = LUFactor(a,ipivot,n)                            # LU decomposition of a
 print("LU decomposition:")
 MatPrint(a,n,n)
 
-for k in range(1,n+1):                           # loop over constant vectors
+for _ in range(1,n+1):
    for i in range(1,n+1): b[i] = x[i] = random()      # random constant terms
    print("b:")
    VecPrint(b,n)

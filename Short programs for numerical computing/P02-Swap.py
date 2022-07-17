@@ -1,7 +1,7 @@
 # Returning swapped arguments from a function
 
 def Swap(x, y):                            # scalar arguments passed by value
-   temp = x; x = y; y = temp
+   x, y = y, x
    return (x, y)                                 # return interchanged values
 
 # main

@@ -22,7 +22,8 @@ hx = 1e-4                                                  # x-mesh step size
 
 nx = int(xx/hx + 0.5) + 1                           # number of x-mesh points
 nc = int(xc/hx + 0.5) + 1               # index of checkpoint for vanishing y
-x = [0]*(nx+1); y = [0]*(nx+1)                             # x-mesh, solution
+x = [0]*(nx+1)
+y = [0]*(nx+1)                             # x-mesh, solution
 V = [0]*(nx+1)                                          # tabulated potential
 
 for m in range(1,nx+1):
@@ -41,25 +42,24 @@ while (Ew < Emax):                             # loop over eigenvalue windows
 
    Ew += dE                                 # shift [Ew,Ew+dE] for next shoot
 
-if (exist):
+if exist:
    n = int(E)                                                # quantum number
 
    f = 0e0                                  # normalize y by trapezoidal rule
    for m in range(1,nc+1): f += y[m]*y[m]*hx              # norm for [0,+inf]
    f = sqrt(2e0*f)
-   if (int(n/2) % 2): f = -f                                # sign correction
+   if n // 2 % 2: f = -f                                # sign correction
    for m in range(1,nx+1): y[m] /= f
 
    f = sqrt(pi)                                 # norm of Hermite polynomials
    for i in range(1,n+1): f *= 2e0 * i
    f = 1e0/sqrt(f)
 
-   out = open("shoot.txt","w")
-   out.write("E{0:1d} = {1:8.5f}\n".format(n,E))
-   out.write("      x        y{0:1d}        err\n".format(n))
-   for m in range(1,nc+1):
-      (yH, d) = Hermite(n,x[m]); yH *= f * exp(-0.5*x[m]*x[m])
-      out.write(("{0:10.5f}{1:10.5f}{2:10.5f}\n").format(x[m],y[m],yH-y[m]))
-   out.close()
+   with open("shoot.txt","w") as out:
+      out.write("E{0:1d} = {1:8.5f}\n".format(n,E))
+      out.write("      x        y{0:1d}        err\n".format(n))
+      for m in range(1,nc+1):
+         (yH, d) = Hermite(n,x[m]); yH *= f * exp(-0.5*x[m]*x[m])
+         out.write(("{0:10.5f}{1:10.5f}{2:10.5f}\n").format(x[m],y[m],yH-y[m]))
 else:
    print("No solution found !")

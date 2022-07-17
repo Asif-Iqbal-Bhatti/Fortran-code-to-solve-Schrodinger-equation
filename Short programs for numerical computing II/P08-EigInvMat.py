@@ -5,11 +5,12 @@ from eigsys import *
 from matutil import *
 
 n = 100                                                     # order of matrix
-a  = [[0]*(n+1) for i in range(n+1)]                     # coefficient matrix
-a1 = [[0]*(n+1) for i in range(n+1)]                           # inverse of a
-x  = [[0]*(n+1) for i in range(n+1)]                      # eigenvectors of a
-x1 = [[0]*(n+1) for i in range(n+1)]                     # eigenvectors of a1
-d = [0]*(n+1); d1 = [0]*(n+1)                       # eigenvalues of a and a1
+a = [[0]*(n+1) for _ in range(n+1)]
+a1 = [[0]*(n+1) for _ in range(n+1)]
+x = [[0]*(n+1) for _ in range(n+1)]
+x1 = [[0]*(n+1) for _ in range(n+1)]
+d = [0]*(n+1)
+d1 = [0]*(n+1)                       # eigenvalues of a and a1
 
 seed()                                   # initialize random number generator
 for i in range(1,n+1):                   # generate random coefficient matrix

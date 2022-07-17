@@ -80,11 +80,11 @@ def MatPow(m, a, b, n):
 #----------------------------------------------------------------------------
 #  Returns the m-th power of the square matrix a[1:n][1:n] in b[1:n][1:n]
 #----------------------------------------------------------------------------
-   c = [[0]*(n+1) for i in range(n+1)]                           # work array
+   c = [[0]*(n+1) for _ in range(n+1)]
 
    MatCopy(a,b,n,n)                                              # case m = 1
 
-   for k in range(2,m+1):                           # repeated multiplication
+   for _ in range(2,m+1):
       MatProd(a,b,c,n,n,n)
       MatCopy(c,b,n,n)
 

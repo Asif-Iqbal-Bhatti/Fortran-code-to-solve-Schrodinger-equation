@@ -126,11 +126,15 @@ def Plot(x, y, n, col, sty, fxmin, fxmax, fymin, fymax, xtext, ytext, title):
    global w, nxw, nyw                                # canvas object and size
    maxintx = maxinty = 10              # max. number of labeling subintervals
 
-   xmin = min(x[1:n+1]); xmax = max(x[1:n+1])                 # domain limits
-   ymin = min(y[1:n+1]); ymax = max(y[1:n+1])
+   xmin = min(x[1:n+1])
+   xmax = max(x[1:n+1])                 # domain limits
+   ymin = min(y[1:n+1])
+   ymax = max(y[1:n+1])
 
-   ixmin = Nint(fxmin*nxw); iymin = Nint((1e0-fymin)*nyw)   # viewport limits
-   ixmax = Nint(fxmax*nxw); iymax = Nint((1e0-fymax)*nyw)
+   ixmin = Nint(fxmin*nxw)
+   iymin = Nint((1e0-fymin)*nyw)   # viewport limits
+   ixmax = Nint(fxmax*nxw)
+   iymax = Nint((1e0-fymax)*nyw)
 
    if (sty == 2):                                                # polar plot
       xmin = min(xmin,ymin); xmax = max(xmax,ymax)       # make domain square
@@ -162,9 +166,10 @@ def Plot(x, y, n, col, sty, fxmin, fxmax, fymin, fymax, xtext, ytext, title):
    bx = ixmin - ax*xmin
 
    tic =(ixmax-ixmin)/100.                                       # tic length
-   h = (xmax-xmin)/nintv; htic = ax * h                       # labeling step
-   iytext = iymin + 1.5*nfont 
-   for i in range(0,nintv+1):                                    # label axis
+   h = (xmax-xmin)/nintv
+   htic = ax * h                       # labeling step
+   iytext = iymin + 1.5*nfont
+   for i in range(nintv+1):                                    # label axis
       ix = Nint(ixmin + i*htic)
       w.create_line(ix,iymin,ix,iymin-tic)                             # tics
       w.create_line(ix,iymax,ix,iymax+tic)
@@ -173,20 +178,22 @@ def Plot(x, y, n, col, sty, fxmin, fxmax, fymin, fymax, xtext, ytext, title):
          w.create_text(ix,iytext,text=mant,font=font1)               # labels
 
    if (xtext != "None"):
-      if ((scale<0.1) or (scale>1000.0)): xtext = xtext + " 1e" + expn 
+      if ((scale<0.1) or (scale>1000.0)):
+         xtext = f"{xtext} 1e{expn}"
       ixtext = (ixmin+ixmax)/2
       iytext = iytext + 2*nfont
       w.create_text(ixtext,iytext,text=xtext,font=font2)            # x title
-                                                                     # Y-AXIS
+                                                                        # Y-AXIS
    if (ymin == 0.0 and ymax == 0.0): ymin = -1e0; ymax = 1e0     # horizontal
    if (abs(ymax-ymin) < 1e-5*abs(ymax)): ymin *= 0.9; ymax *= 1.1
    (ymin,ymax,scale,nsigd,nintv) = Limits(ymin,ymax,maxinty)  # extend limits
    ay = (iymax-iymin)/(ymax-ymin)                    # y scaling coefficients
    by = iymin - ay*ymin
 
-   h = (ymax-ymin)/nintv; htic = ay * h                  # labeling step size
-   ixtext = ixmin - nfont 
-   for i in range(0,nintv+1):                                    # label axis
+   h = (ymax-ymin)/nintv
+   htic = ay * h                  # labeling step size
+   ixtext = ixmin - nfont
+   for i in range(nintv+1):                                    # label axis
       iy = Nint(iymin + i*htic)
       w.create_line(ixmin,iy,ixmin+tic,iy)                             # tics
       w.create_line(ixmax,iy,ixmax-tic,iy)
@@ -195,29 +202,33 @@ def Plot(x, y, n, col, sty, fxmin, fxmax, fymin, fymax, xtext, ytext, title):
          w.create_text(ixtext,iy,text=mant,font=font1,anchor="e")    # labels
 
    if (ytext != "None"):
-      if ((scale<0.1) or (scale>1000.0)): ytext = ytext + " 1e" + expn 
+      if ((scale<0.1) or (scale>1000.0)):
+         ytext = f"{ytext} 1e{expn}"
       ixtext = ixtext - (3*nfont/4) * (len(mant) + 2)       # skip labels + 2
       iytext = (iymin+iymax)/2                              # vertical middle
       w.create_text(ixtext,iytext,text=ytext,font=font2,anchor="e") # y title
-                                                                  # draw axes
+                                                                     # draw axes
    if (xmin*xmax < 0): w.create_line(Nint(bx),iymin,Nint(bx),iymax)  # y-axis
    if (ymin*ymax < 0): w.create_line(ixmin,Nint(by),ixmax,Nint(by))  # x-axis
 
    tic = 2*tic/3
    if (sty == 4): hx = ax * (x[2] - x[1])
-   ix0 = Nint(ax*x[1]+bx); iy0 = Nint(ay*y[1]+by)                 # 1st point
+   ix0 = Nint(ax*x[1]+bx)
+   iy0 = Nint(ay*y[1]+by)                 # 1st point
    for i in range(1,n+1):
-      ix = Nint(ax*x[i]+bx); iy = Nint(ay*y[i]+by)                # new point
+      ix = Nint(ax*x[i]+bx)
+      iy = Nint(ay*y[i]+by)                # new point
       if (sty == 0):                                           # scatter plot
          w.create_rectangle(ix-tic,iy-tic,ix+tic,iy+tic, \
                             fill="",outline=col)
-      if (sty == 1 or sty == 2):                         # line or polar plot
+      if sty in [1, 2]:                         # line or polar plot
          w.create_line(ix0,iy0,ix,iy,fill=col)
       if (sty == 3):                                             # drop lines
          w.create_line(ix,by,ix,iy,fill=col)
       if (sty == 4 and i < n):
          w.create_rectangle(ix+1,iy,ix+hx-1,by,fill="",outline=col)
-      ix0 = ix; iy0 = iy                                         # save point
+      ix0 = ix
+      iy0 = iy                                         # save point
 
 #============================================================================
 def MultiPlot(x, y, sig, n, col, sty, nplot, maxint, \
@@ -272,8 +283,10 @@ def MultiPlot(x, y, sig, n, col, sty, nplot, maxint, \
                ymin = min(ymin,y[i]-sig[i])
                ymax = max(ymax,y[i]+sig[i])
 
-   ixmin = Nint(fxmin*nxw); iymin = Nint((1e0-fymin)*nyw)   # viewport limits
-   ixmax = Nint(fxmax*nxw); iymax = Nint((1e0-fymax)*nyw)
+   ixmin = Nint(fxmin*nxw)
+   iymin = Nint((1e0-fymin)*nyw)   # viewport limits
+   ixmax = Nint(fxmax*nxw)
+   iymax = Nint((1e0-fymax)*nyw)
 
    if (2 in sty[1:]):                                            # polar plot
       xmin = min(xmin,ymin); xmax = max(xmax,ymax)       # make domain square
@@ -304,9 +317,10 @@ def MultiPlot(x, y, sig, n, col, sty, nplot, maxint, \
    bx = ixmin - ax*xmin 
 
    tic =(ixmax-ixmin)/100.                                       # tic length
-   h = (xmax-xmin)/nintv; htic = ax * h                       # labeling step
-   iytext = iymin + 1.5*nfont 
-   for i in range(0,nintv+1):                                    # label axis
+   h = (xmax-xmin)/nintv
+   htic = ax * h                       # labeling step
+   iytext = iymin + 1.5*nfont
+   for i in range(nintv+1):                                    # label axis
       ix = Nint(ixmin + i*htic)
       w.create_line(ix,iymin,ix,iymin-tic)                             # tics
       w.create_line(ix,iymax,ix,iymax+tic)
@@ -315,20 +329,22 @@ def MultiPlot(x, y, sig, n, col, sty, nplot, maxint, \
          w.create_text(ix,iytext,text=mant,font=font1)               # labels
 
    if (xtext != "None"):
-      if ((scale<0.1) or (scale>1000.0)): xtext = xtext + " 1e" + expn 
+      if ((scale<0.1) or (scale>1000.0)):
+         xtext = f"{xtext} 1e{expn}"
       ixtext = (ixmin+ixmax)/2
       iytext = iytext + 2*nfont
       w.create_text(ixtext,iytext,text=xtext,font=font2)            # x title
-                                                                     # Y-AXIS
+                                                                        # Y-AXIS
    if (ymin == 0.0 and ymax == 0.0): ymin = -1e0; ymax = 1e0     # horizontal
    if (abs(ymax-ymin) < 1e-5*abs(ymax)): ymin *= 0.9; ymax *= 1.1
    (ymin,ymax,scale,nsigd,nintv) = Limits(ymin,ymax,maxint)   # extend limits
    ay = (iymax-iymin)/(ymax-ymin)                    # y scaling coefficients
    by = iymin - ay*ymin 
 
-   h = (ymax-ymin)/nintv; htic = ay * h                  # labeling step size
-   ixtext = ixmin - nfont 
-   for i in range(0,nintv+1):                                    # label axis
+   h = (ymax-ymin)/nintv
+   htic = ay * h                  # labeling step size
+   ixtext = ixmin - nfont
+   for i in range(nintv+1):                                    # label axis
       iy = Nint(iymin + i*htic)
       w.create_line(ixmin,iy,ixmin+tic,iy)                             # tics
       w.create_line(ixmax,iy,ixmax-tic,iy)
@@ -337,11 +353,12 @@ def MultiPlot(x, y, sig, n, col, sty, nplot, maxint, \
          w.create_text(ixtext,iy,text=mant,font=font1,anchor="e")    # labels
 
    if (ytext != "None"):
-      if ((scale<0.1) or (scale>1000.0)): ytext = ytext + " 1e" + expn 
+      if ((scale<0.1) or (scale>1000.0)):
+         ytext = f"{ytext} 1e{expn}"
       ixtext = ixtext - (3*nfont/4) * (len(mant) + 2)       # skip labels + 2
       iytext = (iymin+iymax)/2                              # vertical middle
       w.create_text(ixtext,iytext,text=ytext,font=font2,anchor="e") # y title
-                                                                  # draw axes
+                                                                     # draw axes
    if (xmin*xmax < 0): w.create_line(Nint(bx),iymin,Nint(bx),iymax)  # y-axis
    if (ymin*ymax < 0): w.create_line(ixmin,Nint(by),ixmax,Nint(by))  # x-axis
 
@@ -350,16 +367,18 @@ def MultiPlot(x, y, sig, n, col, sty, nplot, maxint, \
       icol = col[iplot]
       isty = sty[iplot]
       i0 = 1 if iplot == 1 else n[iplot-1] + 1
-      ix0 = Nint(ax*x[i0]+bx); iy0 = Nint(ay*y[i0]+by)            # 1st point
+      ix0 = Nint(ax*x[i0]+bx)
+      iy0 = Nint(ay*y[i0]+by)            # 1st point
       if (isty == 0):
          w.create_rectangle(ix0-tic,iy0-tic,ix0+tic,iy0+tic, \
                             fill="",outline=icol)
       for i in range(i0,n[iplot]+1):
-         ix = Nint(ax*x[i]+bx); iy = Nint(ay*y[i]+by)             # new point
+         ix = Nint(ax*x[i]+bx)
+         iy = Nint(ay*y[i]+by)             # new point
          if (isty == 0):                                       # scatter plot
             w.create_rectangle(ix-tic,iy-tic,ix+tic,iy+tic, \
                                fill="",outline=icol)
-         if (abs(isty) == 1 or abs(isty) == 2):          # line or polar plot
+         if abs(isty) in [1, 2]:          # line or polar plot
             if (isty > 0): w.create_line(ix0,iy0,ix,iy,fill=icol)
             else:          w.create_line(ix0,iy0,ix,iy,fill=icol,dash=(4,4))
          if (isty == 3):                                         # drop lines
@@ -374,7 +393,8 @@ def MultiPlot(x, y, sig, n, col, sty, nplot, maxint, \
                              fill="white",outline=icol)
             else:
                w.create_line(ix0,iy0,ix,iy,fill=icol)
-         ix0 = ix; iy0 = iy                                      # save point
+         ix0 = ix
+         iy0 = iy                                      # save point
 
 #============================================================================
 def RGBcolors(ncolstep):
@@ -431,19 +451,20 @@ def ColorLegend(fmin, fmax, ixmin, ixmax, iymin, iymax):
       ic = min(max(1,int((iy-iymin)*hcol)),ncol)
       w.create_line(ixmin,iy,ixmax,iy,fill=icol[ic])
    w.create_rectangle(ixmin,iymin,ixmax,iymax)
-   
+
    (fmin,fmax,scale,nsigd,nintv) = Limits(fmin,fmax,10)       # extend limits
    ay = (iymax-iymin)/(fmax-fmin)                      # scaling coefficients
    by = iymin - ay*fmin
-   h = (fmax-fmin)/nintv; htic = ay * h                  # labeling step size
-   ixtext = ixmax + (nsigd+1)*nfont 
-   for i in range(0,nintv+1):                                  # label legend
+   h = (fmax-fmin)/nintv
+   htic = ay * h                  # labeling step size
+   ixtext = ixmax + (nsigd+1)*nfont
+   for i in range(nintv+1):                                  # label legend
       iy = Nint(iymin + i*htic)
       (mant,expn) = FormStr(fmin+i*h,scale,nsigd)
       w.create_text(ixtext,iy,text=mant,font=font,anchor="e")        # labels
 
    if ((scale<0.1) or (scale>1000.0)):
-      ytext = " x 1e" + expn 
+      ytext = f" x 1e{expn}"
       w.create_text(ixtext,iymin+2*nfont,text=ytext,font=font,anchor="e")
 
    return (fmin, fmax, icol, ncol, nintv)

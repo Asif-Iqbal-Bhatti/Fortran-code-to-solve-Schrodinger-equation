@@ -4,8 +4,8 @@ from matutil import *
 
 n = 6
 
-H = [[0]*(n+1) for i in range(n+1)]                      # Hamiltonian matrix
-C = [[0]*(n+1) for i in range(n+1)]                  # molecular coefficients
+H = [[0]*(n+1) for _ in range(n+1)]
+C = [[0]*(n+1) for _ in range(n+1)]
 E = [0]*(n+1)                                                 # eigenenergies
 
 alpha = -6.9                     # Coulomb & resonance integrals: F. Brogli &
@@ -14,8 +14,8 @@ beta = -3.2                      # E. Heilbronner, Theoret. Chim. Acta 1972
 for i in range(1,n+1): H[i][i] = alpha                    # diagonal elements
 for i in range(1,n):
    H[i+1][i] = beta; H[i][i+1] = beta                 # off-diagonal elements
-H[1][6] = beta; H[6][1] = beta                   # cyclic boundary conditions
-                                                        # exact eigenenergies
+H[1][6] = beta
+H[6][1] = beta                   # cyclic boundary conditions
 X = (0, alpha+2*beta, alpha+beta, alpha+beta, \
         alpha-beta, alpha-beta, alpha-2*beta )
 print("Eigenenergies (exact):")

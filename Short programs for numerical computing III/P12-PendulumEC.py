@@ -17,17 +17,16 @@ du0 = 0e0                                                # initial derivative
 tmax = 20e0                                                       # time span
 ht = 0.01e0                                                  # time step size
 
-out = open("pendulum.txt","w")                             # open output file
-out.write("      t         u        du\n")
+with open("pendulum.txt","w") as out:
+   out.write("      t         u        du\n")
 
-t = 0e0
-u = u0; du = du0
-out.write(("{0:10.5f}{1:10.5f}{2:10.5f}\n").format(t,u,du))
-
-while (t+ht <= tmax):                                      # propagation loop
-   (u, du) = EulerCromer1(t,ht,u,du,Func)
-   t += ht
-
+   t = 0e0
+   u = u0
+   du = du0
    out.write(("{0:10.5f}{1:10.5f}{2:10.5f}\n").format(t,u,du))
 
-out.close()
+   while (t+ht <= tmax):                                      # propagation loop
+      (u, du) = EulerCromer1(t,ht,u,du,Func)
+      t += ht
+
+      out.write(("{0:10.5f}{1:10.5f}{2:10.5f}\n").format(t,u,du))

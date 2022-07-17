@@ -32,9 +32,11 @@ h = 1e-8                                           # step-size for wavelength
 n = int(lam_plot/h + 0.5) + 1                       # number of points / plot
 nmax = 3 * n                                         # total number of points
 
-x = [0]*(nmax+1); y = [0]*(nmax+1); z = [0]*(nmax+1)
+x = [0]*(nmax+1)
+y = [0]*(nmax+1)
+z = [0]*(nmax+1)
 
-for j in range(0,3):
+for j in range(3):
    T = 4000e0 + j * 1000e0                              # current temperature
    lam0 = hP*c / (kB*T)                                # reference wavelength
    K = 8e0 * pi * kB * T / pow(lam0,4)                     # factor of u(lam)
@@ -69,7 +71,8 @@ T = 5778e0                                 # temperature of sun's photosphere
 lam0 = hP*c / (kB*T)                                   # reference wavelength
 K = 8e0 * pi * kB * T / pow(lam0,4)                        # factor of u(lam)
 
-fmin = 1e10; fmax = -1e10            # positions of maximum and minimum of du
+fmin = 1e10
+fmax = -1e10            # positions of maximum and minimum of du
 for i in range(1,n+1):
    lam = (i-1)*h; f = du(lam)
    if (f > fmax): fmax = f; lam_1 = lam                             # maximum

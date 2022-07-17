@@ -44,20 +44,23 @@ if (nplot % nplotx): nploty += 1                    # incomplete row of plots
 dplotx = 1e0/nplotx                      # fractional width of a plot along x
 dploty = 1e0/nploty                      # fractional width of a plot along y
 
-xplot = 0; yplot = 0                              # lower-left corner of plot
-for n in range(0,nmax+1):                                            # n-loop
-   for l in range (0,n):                                             # l-loop
+xplot = 0
+yplot = 0                              # lower-left corner of plot
+for n in range(nmax+1):                                            # n-loop
+   for l in range(n):                                          # l-loop
       for i in range(1,nr+1):                                        # r-loop
          r = (i-1) * h
          f = RadPsiH(n,l,r)
          x[i] = r
          y[i] = r * r * f * f
-      
-      fxmin = xplot + 0.20*dplotx; fxmax = xplot + 0.90*dplotx     # viewport
-      fymin = yplot + 0.15*dploty; fymax = yplot + 0.85*dploty
-      title = "r^2 |R_" + repr(n) + repr(l) + "(r)|^2"
+
+      fxmin = xplot + 0.20*dplotx
+      fxmax = xplot + 0.90*dplotx     # viewport
+      fymin = yplot + 0.15*dploty
+      fymax = yplot + 0.85*dploty
+      title = f"r^2 |R_{repr(n)}{repr(l)}(r)|^2"
       Plot(x,y,nr,"blue",1,fxmin,fxmax,fymin,fymax,"r","",title)
-         
+
       xplot += dplotx
       if (xplot >= 1):                             # reached the right margin
          xplot = 0                                 # begin a new row of plots
