@@ -13,9 +13,12 @@ def Chebyshev(n, x):
    if (n == 0):
       f = 1e0; d = 0e0
    else:
-      f = x; fm1 = 1e0; x2 = 2*x
-      for i in range(2,n+1):
-         fm2 = fm1; fm1 = f
+      f = x
+      fm1 = 1e0
+      x2 = 2*x
+      for _ in range(2,n+1):
+         fm2 = fm1
+         fm1 = f
          f = x2*fm1 - fm2
 
       d = n*(x*f-fm1)/(x*x-1e0) if (x*x-1e0) else n*n*f/x
